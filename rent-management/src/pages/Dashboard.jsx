@@ -179,7 +179,7 @@ function DashboardHome() {
               </Link>
               <Link
                 to="/dashboard/add-property"
-                className="bg-airbnb-red-500 hover:bg-airbnb-red-600 text-white font-semibold py-4 px-8 rounded-airbnb-lg transition-all duration-300 shadow-airbnb hover:shadow-airbnb-lg hover:shadow-airbnb-glow transform hover:-translate-y-1 flex items-center space-x-3"
+                className="bg-airbnb-red-500 hover:bg-airbnb-red-600 text-white font-semibold py-4 px-8 rounded-airbnb-lg transition-all duration-300 shadow-airbnb hover:shadow-airbnb-glow transform hover:-translate-y-1 flex items-center space-x-3"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -200,7 +200,7 @@ function DashboardHome() {
               <p className="text-airbnb-600 text-lg mb-8 max-w-md mx-auto">Start building your property portfolio by adding your first property.</p>
               <Link
                 to="/dashboard/add-property"
-                className="bg-airbnb-red-500 hover:bg-airbnb-red-600 text-white font-semibold py-4 px-8 rounded-airbnb-lg transition-all duration-300 shadow-airbnb hover:shadow-airbnb-lg hover:shadow-airbnb-glow transform hover:-translate-y-1 inline-flex items-center space-x-3 text-lg"
+                className="bg-airbnb-red-500 hover:bg-airbnb-red-600 text-white font-semibold py-4 px-8 rounded-airbnb-lg transition-all duration-300 shadow-airbnb hover:shadow-airbnb-glow transform hover:-translate-y-1 inline-flex items-center space-x-3 text-lg"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -270,6 +270,12 @@ function Dashboard() {
                 className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/add-unit')}`}
               >
                 Add Unit
+              </Link>
+              <Link 
+                to="/dashboard/add-tenant" 
+                className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/add-tenant')}`}
+              >
+                Add Tenant
               </Link>
             </div>
           </div>
