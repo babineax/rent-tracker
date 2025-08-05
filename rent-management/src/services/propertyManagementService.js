@@ -571,170 +571,121 @@ export const getPropertyStats = async () => {
  */
 export const getDashboardStats = async () => {
   try {
-    // Try to get basic stats first
-    let basicStats = null;
-    try {
-      const statsResult = await getPropertyStats();
-      if (statsResult.data && !statsResult.error) {
-        basicStats = statsResult.data;
-      }
-    } catch (statsError) {
-      console.log('Basic stats failed, using fallback:', statsError);
-    }
+    // Get all data in parallel for better performance
+    const [propertiesResult, unitsResult, tenantsResult, leasesResult, recentPropertiesResult] = await Promise.all([
+      supabase.from('properties').select('county'),
+      supabase.from('units').select('unit_type, is_available, rent_amount'),
+      supabase.from('tenants').select('id, name, created_at'),
+      supabase.from('leases').select('id, status, rent_amount, start_date, end_date, tenant_id, unit_id'),
+      supabase.from('properties').select('id, name, city, county, created_at').order('created_at', { ascending: false }).limit(5)
+    ]);
 
-    // If basic stats failed or is null, use fallback approach
-    if (!basicStats) {
-      console.log('Using fallback stats calculation');
-      
-      try {
-        // Get all data in parallel for better performance
-        const [propertiesResult, unitsResult, recentPropertiesResult] = await Promise.all([
-          supabase.from('properties').select('county'),
-          supabase.from('units').select('unit_type, is_available, rent_amount'),
-          supabase.from('properties').select('id, name, city, county, created_at').order('created_at', { ascending: false }).limit(5)
-        ]);
+    // Extract data safely
+    const properties = propertiesResult.data || [];
+    const units = unitsResult.data || [];
+    const tenants = tenantsResult.data || [];
+    const leases = leasesResult.data || [];
+    const recentProperties = recentPropertiesResult.data || [];
 
-        // Extract data safely
-        const properties = propertiesResult.data || [];
-        const units = unitsResult.data || [];
-        const recentProperties = recentPropertiesResult.data || [];
+    // Calculate basic property and unit statistics
+    const totalProperties = properties.length;
+    const totalUnits = units.length;
+    const availableUnits = units.filter(unit => unit.is_available).length;
+    const totalMonthlyRent = units.reduce((sum, unit) => sum + (unit.rent_amount || 0), 0);
+    const averageRent = totalUnits > 0 ? totalMonthlyRent / totalUnits : 0;
+    const occupiedRent = totalMonthlyRent - (availableUnits * averageRent);
 
-        // Calculate statistics
-        const totalProperties = properties.length;
-        const totalUnits = units.length;
-        const availableUnits = units.filter(unit => unit.is_available).length;
-        const totalMonthlyRent = units.reduce((sum, unit) => sum + (unit.rent_amount || 0), 0);
-        const averageRent = totalUnits > 0 ? totalMonthlyRent / totalUnits : 0;
-        const occupiedRent = totalMonthlyRent - (availableUnits * averageRent);
+    // Calculate tenant statistics
+    const totalTenants = tenants.length;
+    const activeTenants = leases.filter(lease => lease.status === 'active')
+      .map(lease => lease.tenant_id)
+      .filter((id, index, arr) => arr.indexOf(id) === index).length; // Unique active tenants
 
-        // Calculate properties by county
-        const propertiesByCounty = properties.reduce((acc, property) => {
-          if (property.county) {
-            acc[property.county] = (acc[property.county] || 0) + 1;
-          }
-          return acc;
-        }, {});
+    // Calculate lease statistics
+    const totalLeases = leases.length;
+    const activeLeases = leases.filter(lease => lease.status === 'active');
+    const totalActiveLeases = activeLeases.length;
+    const totalMonthlyRentFromLeases = activeLeases.reduce((sum, lease) => sum + (lease.rent_amount || 0), 0);
+    const averageLeaseRent = totalActiveLeases > 0 ? totalMonthlyRentFromLeases / totalActiveLeases : 0;
+    const leaseOccupancyRate = totalUnits > 0 ? (totalActiveLeases / totalUnits) * 100 : 0;
 
-        // Calculate units by type
-        const unitsByType = units.reduce((acc, unit) => {
-          if (!acc[unit.unit_type]) {
-            acc[unit.unit_type] = { total: 0, available: 0 };
-          }
-          acc[unit.unit_type].total += 1;
-          if (unit.is_available) {
-            acc[unit.unit_type].available += 1;
-          }
-          return acc;
-        }, {});
-
-        return {
-          data: {
-            totalProperties,
-            totalUnits,
-            availableUnits,
-            averageRent: Math.round(averageRent),
-            propertiesByCounty,
-            unitsByType,
-            recentProperties,
-            totalMonthlyRent: Math.round(totalMonthlyRent),
-            occupiedRent: Math.round(occupiedRent),
-            occupancyRate: totalUnits > 0 ? Math.round(((totalUnits - availableUnits) / totalUnits) * 100) : 0
-          },
-          error: null
-        };
-      } catch (fallbackError) {
-        console.error('Fallback stats also failed:', fallbackError);
-        // Return safe default values
-        return {
-          data: {
-            totalProperties: 0,
-            totalUnits: 0,
-            availableUnits: 0,
-            averageRent: 0,
-            propertiesByCounty: {},
-            unitsByType: {},
-            recentProperties: [],
-            totalMonthlyRent: 0,
-            occupiedRent: 0,
-            occupancyRate: 0
-          },
-          error: null
-        };
-      }
-    }
-
-    // If we have basic stats, proceed with full calculation
-    try {
-      // Get additional data in parallel
-      const [countyResult, unitTypeResult, recentResult, rentResult] = await Promise.all([
-        supabase.from('properties').select('county').not('county', 'is', null),
-        supabase.from('units').select('unit_type, is_available'),
-        supabase.from('properties').select('id, name, city, county, created_at').order('created_at', { ascending: false }).limit(5),
-        supabase.from('units').select('rent_amount, is_available')
-      ]);
-
-      // Process county data
-      const propertiesByCounty = (countyResult.data || []).reduce((acc, property) => {
+    // Calculate properties by county
+    const propertiesByCounty = properties.reduce((acc, property) => {
+      if (property.county) {
         acc[property.county] = (acc[property.county] || 0) + 1;
-        return acc;
-      }, {});
+      }
+      return acc;
+    }, {});
 
-      // Process unit type data
-      const unitsByType = (unitTypeResult.data || []).reduce((acc, unit) => {
-        if (!acc[unit.unit_type]) {
-          acc[unit.unit_type] = { total: 0, available: 0 };
-        }
-        acc[unit.unit_type].total += 1;
-        if (unit.is_available) {
-          acc[unit.unit_type].available += 1;
-        }
-        return acc;
-      }, {});
+    // Calculate units by type
+    const unitsByType = units.reduce((acc, unit) => {
+      if (!acc[unit.unit_type]) {
+        acc[unit.unit_type] = { total: 0, available: 0 };
+      }
+      acc[unit.unit_type].total += 1;
+      if (unit.is_available) {
+        acc[unit.unit_type].available += 1;
+      }
+      return acc;
+    }, {});
 
-      // Process rent data
-      const rentData = rentResult.data || [];
-      const totalMonthlyRent = rentData.reduce((sum, unit) => sum + (unit.rent_amount || 0), 0);
-      const occupiedRent = rentData
-        .filter(unit => !unit.is_available)
-        .reduce((sum, unit) => sum + (unit.rent_amount || 0), 0);
+    // Calculate lease status distribution
+    const leaseStatusDistribution = leases.reduce((acc, lease) => {
+      acc[lease.status] = (acc[lease.status] || 0) + 1;
+      return acc;
+    }, {});
 
-      return {
-        data: {
-          ...basicStats,
-          propertiesByCounty,
-          unitsByType,
-          recentProperties: recentResult.data || [],
-          totalMonthlyRent: Math.round(totalMonthlyRent),
-          occupiedRent: Math.round(occupiedRent),
-          occupancyRate: basicStats.totalUnits > 0 
-            ? Math.round(((basicStats.totalUnits - basicStats.availableUnits) / basicStats.totalUnits) * 100)
-            : 0
-        },
-        error: null
-      };
-    } catch (additionalDataError) {
-      console.error('Error getting additional data:', additionalDataError);
-      // Return basic stats with minimal additional data
-      return {
-        data: {
-          ...basicStats,
-          propertiesByCounty: {},
-          unitsByType: {},
-          recentProperties: [],
-          totalMonthlyRent: Math.round(basicStats.averageRent * basicStats.totalUnits),
-          occupiedRent: Math.round(basicStats.averageRent * (basicStats.totalUnits - basicStats.availableUnits)),
-          occupancyRate: basicStats.totalUnits > 0 
-            ? Math.round(((basicStats.totalUnits - basicStats.availableUnits) / basicStats.totalUnits) * 100)
-            : 0
-        },
-        error: null
-      };
-    }
+    // Calculate recent activity (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const recentTenants = tenants.filter(tenant => 
+      new Date(tenant.created_at) >= thirtyDaysAgo
+    ).length;
+    
+    const recentLeases = leases.filter(lease => 
+      new Date(lease.start_date) >= thirtyDaysAgo
+    ).length;
+
+    return {
+      data: {
+        // Property statistics
+        totalProperties,
+        totalUnits,
+        availableUnits,
+        averageRent: Math.round(averageRent),
+        propertiesByCounty,
+        unitsByType,
+        recentProperties,
+        totalMonthlyRent: Math.round(totalMonthlyRent),
+        occupiedRent: Math.round(occupiedRent),
+        occupancyRate: totalUnits > 0 ? Math.round(((totalUnits - availableUnits) / totalUnits) * 100) : 0,
+        
+        // Tenant statistics
+        totalTenants,
+        activeTenants,
+        recentTenants,
+        
+        // Lease statistics
+        totalLeases,
+        totalActiveLeases,
+        totalMonthlyRentFromLeases: Math.round(totalMonthlyRentFromLeases),
+        averageLeaseRent: Math.round(averageLeaseRent),
+        leaseOccupancyRate: Math.round(leaseOccupancyRate),
+        leaseStatusDistribution,
+        recentLeases,
+        
+        // Financial insights
+        incomeEfficiency: totalMonthlyRent > 0 ? Math.round((totalMonthlyRentFromLeases / totalMonthlyRent) * 100) : 0
+      },
+      error: null
+    };
   } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
+    console.error('Error calculating dashboard stats:', error);
     // Return safe default values
     return {
       data: {
+        // Property statistics
         totalProperties: 0,
         totalUnits: 0,
         availableUnits: 0,
@@ -744,12 +695,30 @@ export const getDashboardStats = async () => {
         recentProperties: [],
         totalMonthlyRent: 0,
         occupiedRent: 0,
-        occupancyRate: 0
+        occupancyRate: 0,
+        
+        // Tenant statistics
+        totalTenants: 0,
+        activeTenants: 0,
+        recentTenants: 0,
+        
+        // Lease statistics
+        totalLeases: 0,
+        totalActiveLeases: 0,
+        totalMonthlyRentFromLeases: 0,
+        averageLeaseRent: 0,
+        leaseOccupancyRate: 0,
+        leaseStatusDistribution: {},
+        recentLeases: 0,
+        
+        // Financial insights
+        incomeEfficiency: 0
       },
       error: null
     };
   }
 };
+
 
 /**
  * GET PROPERTIES WITH UNIT COUNT
