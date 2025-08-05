@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getUnitById, deleteUnit } from '../services/propertyManagementService.js';
+import { getLeasesByUnit } from '../services/leaseService.js';
 
 function UnitDetail() {
   const { unitId } = useParams();
   const navigate = useNavigate();
   const [unit, setUnit] = useState(null);
+  const [leases, setLeases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,13 +18,24 @@ function UnitDetail() {
   const loadUnitDetails = async () => {
     try {
       setLoading(true);
-      const { data, error } = await getUnitById(unitId);
+      
+      // Load unit details and leases in parallel
+      const [unitResult, leasesResult] = await Promise.all([
+        getUnitById(unitId),
+        getLeasesByUnit(unitId)
+      ]);
 
-      if (error) {
-        throw new Error(error);
+      if (unitResult.error) {
+        throw new Error(unitResult.error);
       }
 
-      setUnit(data);
+      if (leasesResult.error) {
+        console.error('Error loading leases:', leasesResult.error);
+        // Don't throw error for leases, just log it
+      }
+
+      setUnit(unitResult.data);
+      setLeases(leasesResult.data || []);
     } catch (err) {
       console.error('Error loading unit details:', err);
       setError(err.message);
@@ -65,6 +78,25 @@ function UnitDetail() {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const getCurrentLease = () => {
+    return leases.find(lease => lease.status === 'active');
+  };
+
+  const getLeaseStatusColor = (status) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'expired':
+        return 'bg-red-100 text-red-800';
+      case 'terminated':
+        return 'bg-gray-100 text-gray-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   if (loading) {
@@ -169,6 +201,14 @@ function UnitDetail() {
                       {unit.is_available ? 'Available' : 'Occupied'}
                     </span>
                   </div>
+                  {getCurrentLease() && (
+                    <div>
+                      <span className="text-sm text-gray-500">Current Tenant:</span>
+                      <p className="text-sm font-medium text-gray-900">
+                        {getCurrentLease().tenants?.name || 'Unknown'}
+                      </p>
+                    </div>
+                  )}
                   <div>
                     <span className="text-sm text-gray-500">Bedrooms:</span>
                     <p className="text-sm font-medium text-gray-900">{unit.bedrooms}</p>
@@ -228,6 +268,88 @@ function UnitDetail() {
               </div>
             </div>
           )}
+
+          {/* Leases Card */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Lease History</h2>
+              <Link
+                to={`/dashboard/add-lease?unitId=${unitId}`}
+                className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm"
+              >
+                Add Lease
+              </Link>
+            </div>
+            
+            {leases.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No leases yet</h3>
+                <p className="text-gray-600 mb-4">This unit hasn't had any leases yet.</p>
+                <Link
+                  to={`/dashboard/add-lease?unitId=${unitId}`}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Create First Lease
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {leases.map((lease) => (
+                  <div key={lease.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <h3 className="font-medium text-gray-900">
+                          {lease.tenants?.name || 'Unknown Tenant'}
+                        </h3>
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getLeaseStatusColor(lease.status)}`}>
+                          {lease.status}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-semibold text-gray-900">
+                          {formatCurrency(lease.rent_amount)}
+                        </p>
+                        <p className="text-sm text-gray-500">{lease.rent_frequency}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-500">Start Date:</span>
+                        <p className="font-medium text-gray-900">{formatDate(lease.start_date)}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">End Date:</span>
+                        <p className="font-medium text-gray-900">{formatDate(lease.end_date)}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Due Date:</span>
+                        <p className="font-medium text-gray-900">{lease.due_date} of month</p>
+                      </div>
+                      {lease.deposit_amount && (
+                        <div>
+                          <span className="text-gray-500">Deposit:</span>
+                          <p className="font-medium text-gray-900">{formatCurrency(lease.deposit_amount)}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {lease.notes && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <span className="text-gray-500 text-sm">Notes:</span>
+                        <p className="text-sm text-gray-900 mt-1">{lease.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Property Information Card */}
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -292,9 +414,12 @@ function UnitDetail() {
               <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
                 Edit Unit
               </button>
-              <button className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors">
-                View Leases
-              </button>
+              <Link
+                to={`/dashboard/add-lease?unitId=${unitId}`}
+                className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors block text-center"
+              >
+                Add Lease
+              </Link>
               <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition-colors">
                 Maintenance Requests
               </button>
