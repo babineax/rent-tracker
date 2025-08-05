@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { usePropertyManagement } from '../hooks/usePropertyManagement';
 import DashboardStats from '../components/DashboardStats';
+import LeaseStats from '../components/LeaseStats';
 import PropertyFilters from '../components/PropertyFilters';
 import PropertyCard from '../components/PropertyCard';
 
@@ -148,6 +149,11 @@ function DashboardHome() {
           <DashboardStats stats={dashboardStats} />
         </div>
 
+        {/* Lease & Tenant Statistics */}
+        <div className="mb-12">
+          <LeaseStats stats={dashboardStats} />
+        </div>
+
         {/* Filters */}
         <div className="mb-12">
           <PropertyFilters 
@@ -277,6 +283,24 @@ function Dashboard() {
               >
                 Add Tenant
               </Link>
+                    <Link
+        to="/dashboard/add-lease"
+        className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/add-lease')}`}
+      >
+        Add Lease
+      </Link>
+      <Link
+        to="/dashboard/tenants"
+        className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/tenants')}`}
+      >
+        View Tenants
+      </Link>
+      <Link
+        to="/dashboard/leases"
+        className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/leases')}`}
+      >
+        View Leases
+      </Link>
             </div>
           </div>
         </div>
