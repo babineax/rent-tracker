@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createTenant } from '../services/tenantLeaseService.js';
+import { createTenant } from '../services/tenantService.js';
 import FormField from './FormField.jsx';
 
 function TenantForm() {
