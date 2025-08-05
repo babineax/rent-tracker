@@ -29,6 +29,12 @@ function Navigation() {
             >
               Add Property
             </Link>
+            <Link 
+              to="/dashboard/add-tenant" 
+              className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors ${isActive('/dashboard/add-tenant')}`}
+            >
+              Add Tenant
+            </Link>
           </div>
         </div>
       </div>
