@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getPropertyById, getUnits, deleteProperty } from '../services/propertyManagementService.js';
+import { getLeases } from '../services/leaseService.js';
 import { formatCurrency, formatDate, formatPropertyType, formatPhoneNumber } from '../utils/formatters';
 
 function PropertyDetail() {
@@ -8,6 +9,7 @@ function PropertyDetail() {
   const navigate = useNavigate();
   const [property, setProperty] = useState(null);
   const [units, setUnits] = useState([]);
+  const [leases, setLeases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,16 +20,22 @@ function PropertyDetail() {
   const loadPropertyDetails = async () => {
     try {
       setLoading(true);
-      const [propertyResult, unitsResult] = await Promise.all([
+      const [propertyResult, unitsResult, leasesResult] = await Promise.all([
         getPropertyById(propertyId),
-        getUnits({ propertyId })
+        getUnits({ propertyId }),
+        getLeases({ propertyId })
       ]);
 
       if (propertyResult.error) throw new Error(propertyResult.error);
       if (unitsResult.error) throw new Error(unitsResult.error);
+      if (leasesResult.error) {
+        console.error('Error loading leases:', leasesResult.error);
+        // Don't throw error for leases, just log it
+      }
 
       setProperty(propertyResult.data);
       setUnits(unitsResult.data || []);
+      setLeases(leasesResult.data || []);
     } catch (err) {
       console.error('Error loading property details:', err);
       setError(err.message);
@@ -118,6 +126,13 @@ function PropertyDetail() {
   const totalRent = units.reduce((sum, unit) => sum + (unit.rent_amount || 0), 0);
   const averageRent = totalUnits > 0 ? totalRent / totalUnits : 0;
   const occupancyRate = totalUnits > 0 ? ((totalUnits - availableUnits) / totalUnits) * 100 : 0;
+
+  // Calculate lease statistics
+  const activeLeases = leases.filter(lease => lease.status === 'active');
+  const totalActiveLeases = activeLeases.length;
+  const totalMonthlyRentFromLeases = activeLeases.reduce((sum, lease) => sum + (lease.rent_amount || 0), 0);
+  const averageLeaseRent = totalActiveLeases > 0 ? totalMonthlyRentFromLeases / totalActiveLeases : 0;
+  const leaseOccupancyRate = totalUnits > 0 ? (totalActiveLeases / totalUnits) * 100 : 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -223,7 +238,7 @@ function PropertyDetail() {
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalRent)}</p>
-                <p className="text-xs text-gray-500">Monthly Rent</p>
+                <p className="text-xs text-gray-500">Potential Rent</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-purple-600">{formatCurrency(averageRent)}</p>
@@ -243,6 +258,60 @@ function PropertyDetail() {
                 ></div>
               </div>
             </div>
+          </div>
+
+          {/* Lease Statistics */}
+          <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Lease Statistics</h2>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{totalActiveLeases}</p>
+                <p className="text-xs text-gray-500">Active Leases</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{leases.length}</p>
+                <p className="text-xs text-gray-500">Total Leases</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-purple-600">{formatCurrency(totalMonthlyRentFromLeases)}</p>
+                <p className="text-xs text-gray-500">Monthly Income</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600">{formatCurrency(averageLeaseRent)}</p>
+                <p className="text-xs text-gray-500">Avg. Lease Rent</p>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Lease Occupancy</span>
+                <span className="text-sm font-semibold text-gray-900">{Math.round(leaseOccupancyRate)}%</span>
+              </div>
+              <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-green-600 h-2 rounded-full" 
+                  style={{ width: `${leaseOccupancyRate}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {totalActiveLeases > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500">Income vs Potential</span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {totalRent > 0 ? Math.round((totalMonthlyRentFromLeases / totalRent) * 100) : 0}%
+                  </span>
+                </div>
+                <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-orange-600 h-2 rounded-full" 
+                    style={{ width: `${totalRent > 0 ? (totalMonthlyRentFromLeases / totalRent) * 100 : 0}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
           </div>
           
@@ -307,6 +376,16 @@ function PropertyDetail() {
                           </div>
                         </div>
 
+                        {/* Show current tenant if unit is leased */}
+                        {!unit.is_available && (
+                          <div className="mt-2">
+                            <span className="text-gray-500 text-sm">Current Tenant: </span>
+                            <span className="text-sm font-medium text-green-600">
+                              {activeLeases.find(lease => lease.unit_id === unit.id)?.tenants?.name || 'Unknown'}
+                            </span>
+                          </div>
+                        )}
+
                         {unit.square_feet && (
                           <div className="mt-2">
                             <span className="text-gray-500 text-sm">Size: </span>
@@ -329,6 +408,14 @@ function PropertyDetail() {
                         >
                           View Details
                         </Link>
+                        {unit.is_available && (
+                          <Link
+                            to={`/dashboard/add-lease?unitId=${unit.id}`}
+                            className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
+                          >
+                            Add Lease
+                          </Link>
+                        )}
                         <Link
                           to={`/dashboard/edit-unit/${unit.id}`}
                           className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors"
