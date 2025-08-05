@@ -1,10 +1,7 @@
 import React from 'react';
 import { formatCurrency } from '../utils/formatters';
 
-/**
- * Lease and Tenant Statistics Component
- * Displays detailed lease and tenant metrics
- */
+// Lease and tenant statistics
 const LeaseStats = ({ stats }) => {
   if (!stats) return null;
 

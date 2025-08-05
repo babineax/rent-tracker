@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { getTenants } from '../services/tenantService.js';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 
-/**
- * Tenant List Component
- * Displays tenants in a clean, searchable table format
- */
+// Tenant list component
 const TenantList = () => {
   const [tenants, setTenants] = useState([]);
   const [loading, setLoading] = useState(true);

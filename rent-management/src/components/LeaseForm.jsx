@@ -25,13 +25,12 @@ function LeaseForm() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // data loading state
+  // loading state
   const [tenants, setTenants] = useState([]);
   const [units, setUnits] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
   const [dataError, setDataError] = useState('');
 
-  // load tenants and units for dropdowns
   useEffect(() => {
     loadFormData();
   }, []);
@@ -41,7 +40,7 @@ function LeaseForm() {
     setDataError('');
 
     try {
-      // Load tenants and units in parallel
+      // load data
       const [tenantsResult, unitsResult] = await Promise.all([
         getTenants(),
         getUnits()

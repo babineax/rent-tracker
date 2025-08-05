@@ -2,10 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import TenantList from '../components/TenantList';
 
-/**
- * Tenant List Page
- * Dedicated page for viewing and managing tenants
- */
+// Tenant list page
 const TenantListPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">

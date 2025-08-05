@@ -1,15 +1,9 @@
 import { supabase } from '../supabaseClient.js';
 
-// LEASE CRUD OPERATIONS
-
-/**
- * CREATE A NEW LEASE
- * @param {Object} leaseData - lease data object
- * @returns {Object} - { data, error }
- */
+// Lease operations
 export const createLease = async (leaseData) => {
   try {
-    // validate required fields
+    // check required fields
     const requiredFields = ['unitId', 'tenantId', 'rentAmount', 'startDate', 'endDate'];
     for (const field of requiredFields) {
       if (!leaseData[field]) {
@@ -45,7 +39,7 @@ export const createLease = async (leaseData) => {
       throw new Error('Unit already has an active lease. Please terminate the existing lease first.');
     }
 
-    // prepare data for insertion
+    // prepare data
     const leaseToInsert = {
       unit_id: leaseData.unitId,
       tenant_id: leaseData.tenantId,
@@ -97,11 +91,7 @@ export const createLease = async (leaseData) => {
   }
 };
 
-/**
- * GET ALL LEASES WITH OPTIONAL FILTERING
- * @param {Object} filters - optional filters
- * @returns {Object} - { data, error }
- */
+// Get all leases
 export const getLeases = async (filters = {}) => {
   try {
     let query = supabase
@@ -186,11 +176,7 @@ export const getLeases = async (filters = {}) => {
   }
 };
 
-/**
- * GET A SINGLE LEASE BY ID
- * @param {string} leaseId - lease ID
- * @returns {Object} - { data, error }
- */
+// Get lease by ID
 export const getLeaseById = async (leaseId) => {
   try {
     if (!leaseId) {
@@ -233,12 +219,7 @@ export const getLeaseById = async (leaseId) => {
   }
 };
 
-/**
- * UPDATE A LEASE
- * @param {string} leaseId - lease ID
- * @param {Object} updateData - updated lease data
- * @returns {Object} - { data, error }
- */
+// Update lease
 export const updateLease = async (leaseId, updateData) => {
   try {
     if (!leaseId) {
@@ -265,7 +246,7 @@ export const updateLease = async (leaseId, updateData) => {
       updated_at: new Date().toISOString()
     };
 
-    // clean up the data
+    // clean data
     if (leaseToUpdate.unitId) leaseToUpdate.unit_id = leaseToUpdate.unitId;
     if (leaseToUpdate.tenantId) leaseToUpdate.tenant_id = leaseToUpdate.tenantId;
     if (leaseToUpdate.rentFrequency) leaseToUpdate.rent_frequency = leaseToUpdate.rentFrequency;
@@ -277,7 +258,7 @@ export const updateLease = async (leaseId, updateData) => {
     if (leaseToUpdate.rentCurrency) leaseToUpdate.rent_currency = leaseToUpdate.rentCurrency;
     if (leaseToUpdate.notes) leaseToUpdate.notes = leaseToUpdate.notes.trim();
 
-    // remove mapped fields
+    // cleanup
     delete leaseToUpdate.unitId;
     delete leaseToUpdate.tenantId;
     delete leaseToUpdate.rentFrequency;
@@ -323,11 +304,7 @@ export const updateLease = async (leaseId, updateData) => {
   }
 };
 
-/**
- * DELETE A LEASE
- * @param {string} leaseId - lease ID
- * @returns {Object} - { success, error }
- */
+// Delete lease
 export const deleteLease = async (leaseId) => {
   try {
     if (!leaseId) {
@@ -351,11 +328,7 @@ export const deleteLease = async (leaseId) => {
   }
 };
 
-/**
- * GET LEASES BY UNIT
- * @param {string} unitId - unit ID
- * @returns {Object} - { data, error }
- */
+// Get leases by unit
 export const getLeasesByUnit = async (unitId) => {
   try {
     if (!unitId) {
@@ -387,11 +360,7 @@ export const getLeasesByUnit = async (unitId) => {
   }
 };
 
-/**
- * GET LEASES BY TENANT
- * @param {string} tenantId - tenant ID
- * @returns {Object} - { data, error }
- */
+// Get leases by tenant
 export const getLeasesByTenant = async (tenantId) => {
   try {
     if (!tenantId) {
@@ -427,10 +396,7 @@ export const getLeasesByTenant = async (tenantId) => {
   }
 };
 
-/**
- * GET LEASE STATISTICS
- * @returns {Object} - { data, error }
- */
+// Get lease statistics
 export const getLeaseStats = async () => {
   try {
     // get total leases

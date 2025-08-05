@@ -2,10 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LeaseList from '../components/LeaseList';
 
-/**
- * Lease List Page
- * Dedicated page for viewing and managing leases
- */
+// Lease list page
 const LeaseListPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">

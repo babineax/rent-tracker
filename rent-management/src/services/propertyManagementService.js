@@ -1,15 +1,9 @@
 import { supabase } from '../supabaseClient.js';
 
-//CRUD OPERATIONS
-
-/**
- * CREATE A NEW PROPERTY
- * @param {Object} propertyData - property data object
- * @returns {Object} - { data, error }
- */
+// Property operations
 export const createProperty = async (propertyData) => {
   try {
-    // validate required fields
+    // check required fields
     const requiredFields = ['name', 'address', 'city', 'county'];
     for (const field of requiredFields) {
       if (!propertyData[field] || !propertyData[field].trim()) {
@@ -17,7 +11,7 @@ export const createProperty = async (propertyData) => {
       }
     }
 
-    // prepare data for insertion
+    // prepare data
     const propertyToInsert = {
       name: propertyData.name.trim(),
       address: propertyData.address.trim(),
@@ -49,11 +43,7 @@ export const createProperty = async (propertyData) => {
   }
 };
 
-/**
- * GET ALL PROPERTIES WITH OPTIONAL FILTERING
- * @param {Object} filters - optional filters
- * @returns {Object} - { data, error }
- */
+// Get all properties
 export const getProperties = async (filters = {}) => {
   try {
     let query = supabase
@@ -92,11 +82,7 @@ export const getProperties = async (filters = {}) => {
   }
 };
 
-/**
- * GET A SINGLE PROPERTY BY ID
- * @param {string} propertyId - property ID
- * @returns {Object} - { data, error }
- */
+// Get property by ID
 export const getPropertyById = async (propertyId) => {
   try {
     if (!propertyId) {

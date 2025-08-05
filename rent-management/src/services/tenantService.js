@@ -1,12 +1,6 @@
 import { supabase } from '../supabaseClient.js';
 
-// TENANT CRUD OPERATIONS
-
-/**
- * CREATE A NEW TENANT
- * @param {Object} tenantData - tenant data object
- * @returns {Object} - { data, error }
- */
+// Tenant operations
 export const createTenant = async (tenantData) => {
   try {
     // validate required fields
@@ -23,7 +17,7 @@ export const createTenant = async (tenantData) => {
       throw new Error('Please enter a valid email address');
     }
 
-    // prepare data for insertion
+    // prepare data
     const tenantToInsert = {
       name: tenantData.name.trim(),
       contact: tenantData.contact.trim(),
@@ -54,11 +48,7 @@ export const createTenant = async (tenantData) => {
   }
 };
 
-/**
- * GET ALL TENANTS WITH OPTIONAL FILTERING
- * @param {Object} filters - optional filters
- * @returns {Object} - { data, error }
- */
+// Get all tenants
 export const getTenants = async (filters = {}) => {
   try {
     let query = supabase
@@ -115,11 +105,7 @@ export const getTenants = async (filters = {}) => {
   }
 };
 
-/**
- * GET A SINGLE TENANT BY ID
- * @param {string} tenantId - tenant ID
- * @returns {Object} - { data, error }
- */
+// Get tenant by ID
 export const getTenantById = async (tenantId) => {
   try {
     if (!tenantId) {
@@ -144,19 +130,14 @@ export const getTenantById = async (tenantId) => {
   }
 };
 
-/**
- * UPDATE A TENANT
- * @param {string} tenantId - tenant ID
- * @param {Object} updateData - updated tenant data
- * @returns {Object} - { data, error }
- */
+// Update tenant
 export const updateTenant = async (tenantId, updateData) => {
   try {
     if (!tenantId) {
       throw new Error('Tenant ID is required');
     }
 
-    // validate required fields if provided
+    // check fields
     const requiredFields = ['name', 'contact', 'email'];
     for (const field of requiredFields) {
       if (updateData[field] && !updateData[field].trim()) {
@@ -178,7 +159,7 @@ export const updateTenant = async (tenantId, updateData) => {
       updated_at: new Date().toISOString()
     };
 
-    // clean up the data
+    // clean data
     if (tenantToUpdate.name) tenantToUpdate.name = tenantToUpdate.name.trim();
     if (tenantToUpdate.contact) tenantToUpdate.contact = tenantToUpdate.contact.trim();
     if (tenantToUpdate.email) tenantToUpdate.email = tenantToUpdate.email.trim().toLowerCase();
@@ -187,7 +168,7 @@ export const updateTenant = async (tenantId, updateData) => {
     if (tenantToUpdate.emergencyContact) tenantToUpdate.emergency_contact = tenantToUpdate.emergencyContact.trim();
     if (tenantToUpdate.emergencyPhone) tenantToUpdate.emergency_phone = tenantToUpdate.emergencyPhone.trim();
 
-    // remove mapped fields
+    // cleanup
     delete tenantToUpdate.phoneNumber;
     delete tenantToUpdate.idNumber;
     delete tenantToUpdate.emergencyContact;
@@ -212,11 +193,7 @@ export const updateTenant = async (tenantId, updateData) => {
   }
 };
 
-/**
- * DELETE A TENANT
- * @param {string} tenantId - tenant ID
- * @returns {Object} - { success, error }
- */
+// Delete tenant
 export const deleteTenant = async (tenantId) => {
   try {
     if (!tenantId) {
@@ -256,11 +233,7 @@ export const deleteTenant = async (tenantId) => {
   }
 };
 
-/**
- * GET TENANT WITH LEASE HISTORY
- * @param {string} tenantId - tenant ID
- * @returns {Object} - { data, error }
- */
+// Get tenant with lease history
 export const getTenantWithLeases = async (tenantId) => {
   try {
     if (!tenantId) {
@@ -305,10 +278,7 @@ export const getTenantWithLeases = async (tenantId) => {
   }
 };
 
-/**
- * GET TENANT STATISTICS
- * @returns {Object} - { data, error }
- */
+// Get tenant statistics
 export const getTenantStats = async () => {
   try {
     // get total tenants

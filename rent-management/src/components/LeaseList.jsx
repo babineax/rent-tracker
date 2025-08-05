@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { getLeases } from '../services/leaseService.js';
 import { formatDate, formatCurrency } from '../utils/formatters';
 
-/**
- * Lease List Component
- * Displays leases in a clean, searchable table format with status indicators
- */
+// Lease list component
 const LeaseList = () => {
   const [leases, setLeases] = useState([]);
   const [loading, setLoading] = useState(true);
