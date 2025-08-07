@@ -10,7 +10,7 @@ function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email,password});
 
     if (error) return alert(error.message);
 
