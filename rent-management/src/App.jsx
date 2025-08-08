@@ -10,13 +10,18 @@ import LeaseListPage from './pages/LeaseListPage';
 import PropertyDetail from './pages/PropertyDetail';
 import UnitDetail from './pages/UnitDetail';
 import StyleTest from './components/StyleTest';
+import LandingPage from './pages/LandingPage';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 import './App.css';
 
 function App() {
   return (
     <div className="min-h-screen">
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/test" element={<StyleTest />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="add-property" element={<AddProperty />} />
