@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './components/signup';
 import Login from './components/login';
@@ -26,3 +27,31 @@ function App() {
 }
 
 export default App;
+=======
+//import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//import Signup from './components/signup';
+//import Login from './components/login';
+
+//function LandlordDashboard() {
+//  return <h1 className="text-center mt-20 text-3xl font-bold">Landlord Dashboard</h1>;
+//}
+
+//function TenantDashboard() {
+//  return <h1 className="text-center mt-20 text-3xl font-bold">Tenant Dashboard</h1>;
+//}
+
+//function App() {
+  //return (
+   // <Router>
+    //  <Routes>
+   //     <Route path="/" element={<Signup />} />
+  //      <Route path="/login" element={<Login />} />
+   //     <Route path="/dashboard/landlord" element={<LandlordDashboard />} />
+   //     <Route path="/dashboard/tenant" element={<TenantDashboard />} />
+   //   </Routes>
+   // </Router>
+//  );
+//}
+
+//export default App;
+>>>>>>> c62b25f34b00eea51181f03ec2abf78db143ae6b
