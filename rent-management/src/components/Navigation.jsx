@@ -24,6 +24,12 @@ function Navigation() {
               Dashboard
             </Link>
             <Link 
+              to="/dashboard/maintenance" 
+              className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/maintenance')}`}
+            >
+              Maintenance
+            </Link>
+            <Link 
               to="/dashboard/add-property" 
               className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors ${isActive('/dashboard/add-property')}`}
             >
