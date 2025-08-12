@@ -117,7 +117,7 @@ function DashboardHome() {
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-xl font-bold text-airbnb-900">Error loading dashboard</h3>
+              <h3 className="text-xl font-bold text-airbnb-900">Error loading the dashboard</h3>
               <div className="mt-2 text-airbnb-600">{propertiesError || statsError}</div>
             </div>
           </div>
