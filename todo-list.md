@@ -34,7 +34,7 @@
   - Unit
   - Tenant
   - Landlord
-- [ ] Store lease in leases collection in Firestore
+- [ ] Store lease in leases collection in supabase
 
 #  Dashboard UI (Dev 4)
 - [ ] Set up **Routing** (React Router or Vue Router)
