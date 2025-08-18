@@ -20,27 +20,7 @@
   - [x] properties collection
   - [x] units collection
 
-# Tenant & Lease Management (Ian)
-- [x] Create **Add Tenant** form (name, contact, email)
-- [x] Create **Add Lease** form with:
-  - [x] Rent amount
-  - [x] Frequency (e.g. monthly)
-  - [x] Due date
-  - [x] Start & End date
-- [x] Link lease to:
-  - [x] Unit
-  - [x] Tenant
-  - [x] Landlord
-- [x] Store lease in leases collection in Firestore
 
-# Dashboard UI (Dev 4)
-- [x] Set up **Routing** (React Router or Vue Router)
-- [x] Draft **Landlord Dashboard** with:
-  - [x] List of properties/units
-  - [x] Add Property/Unit/Tenant/Lease buttons
-- [x] Prepare placeholder **Tenant Dashboard**
-- [x] Create simple **Navbar & Sidebar**
-- [x] Ensure **mobile responsiveness**
 
 # Integration & Testing (Dev 5)
 - [x] Help integrate Property → Unit → Tenant → Lease flow
