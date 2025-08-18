@@ -301,6 +301,12 @@ function Dashboard() {
       >
         View Leases
               </Link>
+              <Link
+                to="/dashboard/finance"
+                className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/finance')}`}
+              >
+                Finance
+              </Link>
             </div>
           </div>
         </div>

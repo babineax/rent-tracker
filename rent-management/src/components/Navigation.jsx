@@ -35,6 +35,12 @@ function Navigation() {
             >
               Add Tenant
             </Link>
+            <Link 
+              to="/dashboard/finance" 
+              className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors ${isActive('/dashboard/finance')}`}
+            >
+              Finance
+            </Link>
           </div>
         </div>
       </div>
