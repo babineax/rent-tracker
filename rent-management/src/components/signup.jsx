@@ -1,40 +1,74 @@
- import { useState } from 'react';
-import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
-function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('tenant');
-  const navigate = useNavigate();
+function SignupForm({ onSubmit, loading, errorMsg }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("tenant");
 
-  const handleSignup = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (error) return alert(error.message);
-
-    // insert role in profiles table
-    await supabase.from('profiles').insert([
-      { id: data.user.id, email, role },
-    ]);
-
-    alert('Account created!');
-    navigate('/login');
+    if (!email || !password) return;
+    onSubmit(email, password, role);
   };
 
   return (
-    <form onSubmit={handleSignup} className="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded space-y-4">
-      <h2 className="text-xl font-bold text-center">Sign Up</h2>
-      <input type="email" placeholder="Email" className="w-full border p-2" onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" className="w-full border p-2" onChange={e => setPassword(e.target.value)} />
-      <select className="w-full border p-2" onChange={e => setRole(e.target.value)}>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-sm mx-auto mt-20 p-6 bg-white shadow rounded space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-center text-crimson">Sign Up</h2>
+
+      {errorMsg && (
+        <div className="text-sm text-red-600 text-center font-medium">
+          {errorMsg}
+        </div>
+      )}
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+
+      <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+      >
         <option value="tenant">Tenant</option>
         <option value="landlord">Landlord</option>
       </select>
-      <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">Sign Up</button>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full max-w-xs mx-auto block bg-crimson hover:bg-red-700 transition text-white py-2 rounded font-semibold shadow"
+      >
+        {loading ? "Creating account..." : "Sign Up"}
+      </button>
+
+      <p className="text-sm text-center mt-4">
+        Already have an account?{" "}
+        <a href="/login" className="text-crimson hover:underline font-medium">
+          Log in here
+        </a>
+      </p>
+
+      <style>{`.text-crimson { color: #DC143C; } .bg-crimson { background-color: #DC143C; }`}</style>
     </form>
   );
 }
 
-export default Signup;   
+export default SignupForm;

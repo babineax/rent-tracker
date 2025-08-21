@@ -1,38 +1,62 @@
-import { useState } from 'react';
-import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+function LoginForm({ onSubmit, loading, errorMsg }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) return alert(error.message);
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.user.id)
-      .single();
-
-    if (!profile) return alert("Role not found!");
-
-    if (profile.role === 'landlord') navigate('/dashboard/landlord');
-    else if (profile.role === 'tenant') navigate('/dashboard/tenant');
+    if (!email || !password) return;
+    onSubmit(email, password);
   };
 
   return (
-    <form onSubmit={handleLogin} className="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded space-y-4">
-      <h2 className="text-xl font-bold text-center">Login</h2>
-      <input type="email" placeholder="Email" className="w-full border p-2" onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" className="w-full border p-2" onChange={e => setPassword(e.target.value)} />
-      <button type="submit" className="w-full bg-green-500 text-white py-2 rounded">Login</button>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-sm mx-auto mt-20 p-6 bg-white shadow rounded space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-center text-crimson">Login</h2>
+
+      {errorMsg && (
+        <div className="text-sm text-red-600 text-center font-medium">
+          {errorMsg}
+        </div>
+      )}
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full max-w-xs mx-auto block bg-crimson hover:bg-red-700 transition text-white py-2 rounded font-semibold shadow"
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
+
+      <p className="text-sm text-center mt-4">
+        Don’t have an account?{" "}
+        <a href="/signup" className="text-crimson hover:underline font-medium">
+          Sign up here
+        </a>
+      </p>
+
+      <style>{`.text-crimson { color: #DC143C; } .bg-crimson { background-color: #DC143C; }`}</style>
     </form>
   );
 }
 
-export default Login;
+export default LoginForm;
