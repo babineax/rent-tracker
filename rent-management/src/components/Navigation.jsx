@@ -31,6 +31,9 @@ function Navigation() {
               <Link to="/dashboard/maintenance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/maintenance')}`}>
                 Maintenance
               </Link>
+              <Link to="/dashboard/finance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/finance')}`}>
+                Finance
+              </Link>
             </div>
           </div>
         </div>

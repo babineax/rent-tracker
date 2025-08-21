@@ -7,6 +7,7 @@ import AddTenant from './pages/AddTenant';
 import AddLease from './pages/AddLease';
 import TenantListPage from './pages/TenantListPage';
 import LeaseListPage from './pages/LeaseListPage';
+import FinanceDashboard from './pages/FinanceDashboard';
 import PropertyDetail from './pages/PropertyDetail';
 import UnitDetail from './pages/UnitDetail';
 import StyleTest from './components/StyleTest';
@@ -37,6 +38,7 @@ function App() {
         <Route path="add-lease" element={<AddLease />} />
         <Route path="tenants" element={<TenantListPage />} />
         <Route path="leases" element={<LeaseListPage />} />
+        <Route path="finance" element={<FinanceDashboard />} />
           <Route path="property/:propertyId" element={<PropertyDetail />} />
           <Route path="unit/:unitId" element={<UnitDetail />} />
         </Route>

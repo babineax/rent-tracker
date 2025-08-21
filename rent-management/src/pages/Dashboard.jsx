@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Navigation from '../components/Navigation'; // Adjust path as needed
-import DashboardHome from '../pages/DashboardHome'; // Adjust path as needed
+import Navigation from '../components/Navigation';
+import DashboardHome from '../pages/DashboardHome';
 
 function Dashboard() {
   const location = useLocation();
