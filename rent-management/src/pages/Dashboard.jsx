@@ -117,7 +117,7 @@ function DashboardHome() {
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-xl font-bold text-airbnb-900">Error loading dashboard</h3>
+              <h3 className="text-xl font-bold text-airbnb-900">Error loading the dashboard</h3>
               <div className="mt-2 text-airbnb-600">{propertiesError || statsError}</div>
             </div>
           </div>
@@ -183,6 +183,7 @@ function DashboardHome() {
                 </svg>
                 <span>Add Unit</span>
               </Link>
+              
               <Link
                 to="/dashboard/add-property"
                 className="bg-airbnb-red-500 hover:bg-airbnb-red-600 text-white font-semibold py-4 px-8 rounded-airbnb-lg transition-all duration-300 shadow-airbnb hover:shadow-airbnb-glow transform hover:-translate-y-1 flex items-center space-x-3"
@@ -264,6 +265,12 @@ function Dashboard() {
                 className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard')}`}
               >
                 Dashboard
+              </Link>
+              <Link 
+                to="/dashboard/maintenance" 
+                className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/maintenance')}`}
+              >
+                Maintenance
               </Link>
               <Link 
                 to="/dashboard/add-property" 

@@ -12,6 +12,7 @@ import UnitDetail from './pages/UnitDetail';
 import StyleTest from './components/StyleTest';
 import LandingPage from './pages/LandingPage';
 import Signup from './pages/Signup';
+import MaintenanceListPage from './pages/MaintenanceListPage';
 import Login from './pages/Login';
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/test" element={<StyleTest />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="add-property" element={<AddProperty />} />
+          <Route path="maintenance" element={<MaintenanceListPage />} />
           <Route path="add-unit" element={<AddUnit />} />
                   <Route path="add-tenant" element={<AddTenant />} />
         <Route path="add-lease" element={<AddLease />} />
