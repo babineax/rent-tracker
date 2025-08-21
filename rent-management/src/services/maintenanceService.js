@@ -1,4 +1,4 @@
-import { supabase } from '../utils/supabaseClient';
+import { supabase } from '../supabaseClient';
 
 // Maintenance Request Service - Sprint 1 Skeleton
 export const maintenanceService = {

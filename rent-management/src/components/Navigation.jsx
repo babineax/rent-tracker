@@ -41,6 +41,12 @@ function Navigation() {
             >
               Add Tenant
             </Link>
+            <Link 
+              to="/dashboard/expense-tracker" 
+              className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors ${isActive('/dashboard/expense-tracker')}`}
+            >
+              Expense Tracker
+            </Link>
           </div>
         </div>
       </div>
