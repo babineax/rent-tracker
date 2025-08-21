@@ -13,7 +13,11 @@ import UnitDetail from './pages/UnitDetail';
 import StyleTest from './components/StyleTest';
 import LandingPage from './pages/LandingPage';
 import Signup from './pages/Signup';
+import MaintenanceListPage from './pages/MaintenanceListPage';
+import RentLogPage from './pages/RentLogPage';
+import ExpenseTracker from './pages/ExpenseTracker';
 import Login from './pages/Login';
+import DashboardTenant from './pages/DashboardTenant';
 import './App.css';
 
 function App() {
@@ -26,6 +30,9 @@ function App() {
         <Route path="/test" element={<StyleTest />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="add-property" element={<AddProperty />} />
+          <Route path="maintenance" element={<MaintenanceListPage />} />
+          <Route path="rent-log" element={<RentLogPage />} />
+          <Route path="expense-tracker" element={<ExpenseTracker />} />
           <Route path="add-unit" element={<AddUnit />} />
                   <Route path="add-tenant" element={<AddTenant />} />
         <Route path="add-lease" element={<AddLease />} />
@@ -35,7 +42,11 @@ function App() {
           <Route path="property/:propertyId" element={<PropertyDetail />} />
           <Route path="unit/:unitId" element={<UnitDetail />} />
         </Route>
+
+        {/* new route for tenant dashboard */}
+        <Route path="/dashboard-tenant" element={<DashboardTenant />} />
       </Routes>
+      
     </div>
   );
 }

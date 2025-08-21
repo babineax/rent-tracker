@@ -1,91 +1,74 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import React, { useState } from "react";
 
-function Signup() {
+function SignupForm({ onSubmit, loading, errorMsg }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("tenant");
-  const [errorMsg, setErrorMsg] = useState("");
-  const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg("");
-
-    if (!email || !password) {
-      setErrorMsg("Please fill in all fields.");
-      return;
-    }
-
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-      setErrorMsg(error.message);
-      return;
-    }
-
-    await supabase.from("profiles").insert([
-      { id: data.user.id, email, role },
-    ]);
-
-    alert("Account created!");
-    navigate("/login");
+    if (!email || !password) return;
+    onSubmit(email, password, role);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
-      <Card className="w-full max-w-md p-6">
-        <CardContent>
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Sign Up</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-sm mx-auto mt-20 p-6 bg-white shadow rounded space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-center text-crimson">Sign Up</h2>
 
-          {errorMsg && (
-            <div className="text-sm text-red-500 mb-3 text-center">{errorMsg}</div>
-          )}
+      {errorMsg && (
+        <div className="text-sm text-red-600 text-center font-medium">
+          {errorMsg}
+        </div>
+      )}
 
-          <form onSubmit={handleSignup} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
-            </div>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
 
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" onChange={(e) => setPassword(e.target.value)} />
-            </div>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
 
-            <div>
-              <Label htmlFor="role">Role</Label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
-              >
-                <option value="tenant">Tenant</option>
-                <option value="landlord">Landlord</option>
-              </select>
-            </div>
+      <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+      >
+        <option value="tenant">Tenant</option>
+        <option value="landlord">Landlord</option>
+      </select>
 
-            <Button type="submit" className="w-full">
-              Sign Up
-            </Button>
-          </form>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full max-w-xs mx-auto block bg-crimson hover:bg-red-700 transition text-white py-2 rounded font-semibold shadow"
+      >
+        {loading ? "Creating account..." : "Sign Up"}
+      </button>
 
-          <p className="text-sm text-center mt-4">
-            Already have an account?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
-              Log in here
-            </a>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+      <p className="text-sm text-center mt-4">
+        Already have an account?{" "}
+        <a href="/login" className="text-crimson hover:underline font-medium">
+          Log in here
+        </a>
+      </p>
+
+      <style>{`.text-crimson { color: #DC143C; } .bg-crimson { background-color: #DC143C; }`}</style>
+    </form>
   );
 }
 
-export default Signup;
+export default SignupForm;

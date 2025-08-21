@@ -1,93 +1,62 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import React, { useState } from "react";
 
-function Login() {
+function LoginForm({ onSubmit, loading, errorMsg }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMsg("");
-
-    if (!email || !password) {
-      setErrorMsg("Please fill in all fields.");
-      return;
-    }
-
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      setErrorMsg(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
-
-    setLoading(false);
-
-    if (profileError || !profile) {
-      setErrorMsg("Could not retrieve role. Contact admin.");
-      return;
-    }
-
-    if (profile.role === "landlord") navigate("/dashboard-landlord");
-    else if (profile.role === "tenant") navigate("/dashboard-tenant");
-    else setErrorMsg("Unknown role.");
+    if (!email || !password) return;
+    onSubmit(email, password);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
-      <Card className="w-full max-w-md p-6">
-        <CardContent>
-          <h2 className="text-2xl font-bold mb-4 text-center text-red-500">Login to RentEase</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-sm mx-auto mt-20 p-6 bg-white shadow rounded space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-center text-crimson">Login</h2>
 
-          {errorMsg && (
-            <div className="text-sm text-red-500 mb-3 text-center">{errorMsg}</div>
-          )}
+      {errorMsg && (
+        <div className="text-sm text-red-600 text-center font-medium">
+          {errorMsg}
+        </div>
+      )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
-            </div>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full max-w-xs mx-auto block border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-crimson"
+        required
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full max-w-xs mx-auto block bg-crimson hover:bg-red-700 transition text-white py-2 rounded font-semibold shadow"
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
 
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" onChange={(e) => setPassword(e.target.value)} />
-            </div>
+      <p className="text-sm text-center mt-4">
+        Don’t have an account?{" "}
+        <a href="/signup" className="text-crimson hover:underline font-medium">
+          Sign up here
+        </a>
+      </p>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-
-          <p className="text-sm text-center mt-4">
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-red-500 hover:underline">
-              Sign up here
-            </a>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+      <style>{`.text-crimson { color: #DC143C; } .bg-crimson { background-color: #DC143C; }`}</style>
+    </form>
   );
 }
 
-export default Login;
-
-
-
+export default LoginForm;
