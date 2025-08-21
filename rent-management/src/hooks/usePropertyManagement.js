@@ -15,6 +15,7 @@ import {
   getUniqueCities,
   getDashboardStats
 } from '../services/propertyManagementService.js';
+import { getRentLogs, updateRentLog as updateRentLogInService } from '../services/rentLogService.js';
 
 // Custom hook for property and unit management operations
 export const usePropertyManagement = () => {
@@ -30,6 +31,11 @@ export const usePropertyManagement = () => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [loadingUnits, setLoadingUnits] = useState(false);
   const [unitsError, setUnitsError] = useState(null);
+
+  // State for rent logs
+  const [rentLogs, setRentLogs] = useState([]);
+  const [loadingRentLogs, setLoadingRentLogs] = useState(false);
+  const [rentLogsError, setRentLogsError] = useState(null);
 
   // State for filters and options
   const [filters, setFilters] = useState({
@@ -420,6 +426,42 @@ export const usePropertyManagement = () => {
   }, [loadProperties, loadPropertiesWithUnits, loadUnits, loadDashboardStats]);
 
   // ========================================
+  // RENT LOG OPERATIONS
+  // ========================================
+
+  const loadRentLogs = useCallback(async (customFilters = null) => {
+    try {
+      setLoadingRentLogs(true);
+      setRentLogsError(null);
+      const { data, error } = await getRentLogs(customFilters || {});
+      if (error) throw new Error(error);
+      setRentLogs(data || []);
+    } catch (error) {
+      console.error('Error loading rent logs:', error);
+      setRentLogsError(error.message);
+    } finally {
+      setLoadingRentLogs(false);
+    }
+  }, []);
+
+  const updateRentLog = useCallback(async (logId, updates) => {
+    try {
+      setIsSubmitting(true);
+      setOperationError(null);
+      const { data, error } = await updateRentLogInService(logId, updates);
+      if (error) throw new Error(error);
+      await loadRentLogs();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error updating rent log:', error);
+      setOperationError(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [loadRentLogs]);
+
+  // ========================================
   // RETURN OBJECT
   // ========================================
 
@@ -478,6 +520,13 @@ export const usePropertyManagement = () => {
     // Utility operations
     clearErrors,
     clearSelected,
-    refreshAll
+    refreshAll,
+
+    // Rent Log operations
+    rentLogs,
+    loadingRentLogs,
+    rentLogsError,
+    loadRentLogs,
+    updateRentLog
   };
 }; 

@@ -273,6 +273,12 @@ function Dashboard() {
                 Maintenance
               </Link>
               <Link 
+                to="/dashboard/rent-log" 
+                className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/rent-log')}`}
+              >
+                Rent Log
+              </Link>
+              <Link 
                 to="/dashboard/add-property" 
                 className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/add-property')}`}
               >
