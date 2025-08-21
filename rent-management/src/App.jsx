@@ -16,6 +16,7 @@ import MaintenanceListPage from './pages/MaintenanceListPage';
 import RentLogPage from './pages/RentLogPage';
 import ExpenseTracker from './pages/ExpenseTracker';
 import Login from './pages/Login';
+import DashboardTenant from './pages/DashboardTenant';
 import './App.css';
 
 function App() {
@@ -39,7 +40,11 @@ function App() {
           <Route path="property/:propertyId" element={<PropertyDetail />} />
           <Route path="unit/:unitId" element={<UnitDetail />} />
         </Route>
+
+        {/* new route for tenant dashboard */}
+        <Route path="/dashboard-tenant" element={<DashboardTenant />} />
       </Routes>
+      
     </div>
   );
 }
