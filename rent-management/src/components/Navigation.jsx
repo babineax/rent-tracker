@@ -25,43 +25,44 @@ function Navigation() {
               <Link to="/dashboard" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard')}`}>
                 Dashboard
               </Link>
+              <Link to="/dashboard/finance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/finance')}`}>
+                Finance
+              </Link>
               <Link to="/dashboard/rent-log" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/rent-log')}`}>
                 Rent Log
               </Link>
               <Link to="/dashboard/maintenance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/maintenance')}`}>
                 Maintenance
               </Link>
-              <Link to="/dashboard/finance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/finance')}`}>
-                Finance
-              </Link>
+              
             </div>
           </div>
         </div>
       </nav>
 
       {/* Secondary Navbar */}
-      <nav className="bg-airbnb-red-600 text-white shadow-md">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-end items-center h-12">
-            <div className="flex space-x-2 sm:space-x-4">
-              <Link to="/dashboard/add-property" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/add-property')}`}>
-                Add Property
-              </Link>
-              <Link to="/dashboard/add-unit" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/add-unit')}`}>
-                Add Unit
-              </Link>
-              <Link to="/dashboard/add-tenant" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/add-tenant')}`}>
-                Add Tenant
-              </Link>
-              <Link to="/dashboard/add-lease" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/add-lease')}`}>
-                Add Lease
-              </Link>
-              <Link to="/dashboard/tenants" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/tenants')}`}>
-                View Tenants
-              </Link>
-              <Link to="/dashboard/leases" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${isActive('/dashboard/leases')}`}>
-                View Leases
-              </Link>
+      <nav className="bg-airbnb-white-600 text-black shadow-md">
+  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex justify-end items-center h-12">
+      <div className="flex space-x-2 sm:space-x-4">
+        <Link to="/dashboard/add-property" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-property' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          Add Property
+        </Link>
+        <Link to="/dashboard/add-unit" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-unit' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          Add Unit
+        </Link>
+        <Link to="/dashboard/add-tenant" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-tenant' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          Add Tenant
+        </Link>
+        <Link to="/dashboard/add-lease" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-lease' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          Add Lease
+        </Link>
+        <Link to="/dashboard/tenants" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/tenants' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          View Tenants
+        </Link>
+        <Link to="/dashboard/leases" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/leases' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
+          View Leases
+        </Link>
             </div>
           </div>
         </div>
