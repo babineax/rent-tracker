@@ -124,17 +124,17 @@ const TenantList = () => {
   return (
     <div className="bg-white rounded-lg shadow-md">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Tenants</h2>
-            <p className="text-sm text-gray-600">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Tenants</h2>
+            <p className="text-xs sm:text-sm text-gray-600">
               {filteredAndSortedTenants.length} of {tenants.length} tenants
             </p>
           </div>
           <Link
             to="/dashboard/add-tenant"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
           >
             Add Tenant
           </Link>
@@ -142,14 +142,14 @@ const TenantList = () => {
       </div>
 
       {/* Search */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
         <div className="relative">
           <input
             type="text"
             placeholder="Search tenants by name, email, phone, or ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,11 +161,11 @@ const TenantList = () => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-[700px] md:min-w-full divide-y divide-gray-200 text-xs sm:text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('name')}
               >
                 <div className="flex items-center space-x-1">
@@ -174,7 +174,7 @@ const TenantList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hidden md:table-cell"
                 onClick={() => handleSort('email')}
               >
                 <div className="flex items-center space-x-1">
@@ -183,7 +183,7 @@ const TenantList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('phone_number')}
               >
                 <div className="flex items-center space-x-1">
@@ -192,7 +192,7 @@ const TenantList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hidden lg:table-cell"
                 onClick={() => handleSort('id_number')}
               >
                 <div className="flex items-center space-x-1">
@@ -201,7 +201,7 @@ const TenantList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hidden lg:table-cell"
                 onClick={() => handleSort('created_at')}
               >
                 <div className="flex items-center space-x-1">
@@ -209,7 +209,7 @@ const TenantList = () => {
                   <SortIcon field="created_at" />
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -217,7 +217,7 @@ const TenantList = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredAndSortedTenants.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-6 py-12 text-center">
+                <td colSpan="6" className="px-4 sm:px-6 py-12 text-center">
                   <div className="text-gray-500">
                     <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -240,29 +240,29 @@ const TenantList = () => {
             ) : (
               filteredAndSortedTenants.map((tenant) => (
                 <tr key={tenant.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{tenant.name}</div>
+                      <div className="text-xs sm:text-sm font-medium text-gray-900">{tenant.name}</div>
                       {tenant.contact && (
-                        <div className="text-sm text-gray-500">{tenant.contact}</div>
+                        <div className="text-xs sm:text-sm text-gray-500">{tenant.contact}</div>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{tenant.email || '-'}</div>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap hidden md:table-cell">
+                    <div className="text-xs sm:text-sm text-gray-900">{tenant.email || '-'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                    <div className="text-xs sm:text-sm text-gray-900">
                       {tenant.phone_number ? formatPhoneNumber(tenant.phone_number) : '-'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{tenant.id_number || '-'}</div>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap hidden lg:table-cell">
+                    <div className="text-xs sm:text-sm text-gray-900">{tenant.id_number || '-'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(tenant.created_at)}</div>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap hidden lg:table-cell">
+                    <div className="text-xs sm:text-sm text-gray-900">{formatDate(tenant.created_at)}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm font-medium">
                     <div className="flex space-x-2">
                       <Link
                         to={`/dashboard/tenant/${tenant.id}`}

@@ -166,17 +166,17 @@ const LeaseList = () => {
   return (
     <div className="bg-white rounded-lg shadow-md">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Leases</h2>
-            <p className="text-sm text-gray-600">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Leases</h2>
+            <p className="text-xs sm:text-sm text-gray-600">
               {filteredAndSortedLeases.length} of {leases.length} leases
             </p>
           </div>
           <Link
             to="/dashboard/add-lease"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+            className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
           >
             Add Lease
           </Link>
@@ -184,15 +184,15 @@ const LeaseList = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1 relative">
             <input
               type="text"
               placeholder="Search by tenant name, unit number, or rent amount..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
             />
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +203,7 @@ const LeaseList = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active</option>
@@ -216,11 +216,11 @@ const LeaseList = () => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-[880px] md:min-w-full divide-y divide-gray-200 text-xs sm:text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('tenants.name')}
               >
                 <div className="flex items-center space-x-1">
@@ -229,7 +229,7 @@ const LeaseList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('units.unit_number')}
               >
                 <div className="flex items-center space-x-1">
@@ -238,7 +238,7 @@ const LeaseList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('rent_amount')}
               >
                 <div className="flex items-center space-x-1">
@@ -247,7 +247,7 @@ const LeaseList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hidden md:table-cell"
                 onClick={() => handleSort('start_date')}
               >
                 <div className="flex items-center space-x-1">
@@ -256,7 +256,7 @@ const LeaseList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 hidden md:table-cell"
                 onClick={() => handleSort('end_date')}
               >
                 <div className="flex items-center space-x-1">
@@ -265,7 +265,7 @@ const LeaseList = () => {
                 </div>
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('status')}
               >
                 <div className="flex items-center space-x-1">
@@ -273,7 +273,7 @@ const LeaseList = () => {
                   <SortIcon field="status" />
                 </div>
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -281,7 +281,7 @@ const LeaseList = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredAndSortedLeases.length === 0 ? (
               <tr>
-                <td colSpan="7" className="px-6 py-12 text-center">
+                <td colSpan="7" className="px-4 sm:px-6 py-12 text-center">
                   <div className="text-gray-500">
                     <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -304,43 +304,43 @@ const LeaseList = () => {
             ) : (
               filteredAndSortedLeases.map((lease) => (
                 <tr key={lease.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-xs sm:text-sm font-medium text-gray-900">
                         {lease.tenants?.name || 'Unknown Tenant'}
                       </div>
                       {lease.tenants?.email && (
-                        <div className="text-sm text-gray-500">{lease.tenants.email}</div>
+                        <div className="text-xs sm:text-sm text-gray-500">{lease.tenants.email}</div>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                    <div className="text-xs sm:text-sm text-gray-900">
                       {lease.units?.unit_number || 'Unknown Unit'}
                     </div>
                     {lease.units?.properties?.name && (
-                      <div className="text-sm text-gray-500">{lease.units.properties.name}</div>
+                      <div className="text-xs sm:text-sm text-gray-500">{lease.units.properties.name}</div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                    <div className="text-xs sm:text-sm font-medium text-gray-900">
                       {formatCurrency(lease.rent_amount)}
                     </div>
-                    <div className="text-sm text-gray-500">{lease.rent_frequency}</div>
+                    <div className="text-xs sm:text-sm text-gray-500">{lease.rent_frequency}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(lease.start_date)}</div>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap hidden md:table-cell">
+                    <div className="text-xs sm:text-sm text-gray-900">{formatDate(lease.start_date)}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(lease.end_date)}</div>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap hidden md:table-cell">
+                    <div className="text-xs sm:text-sm text-gray-900">{formatDate(lease.end_date)}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(lease.status)}`}>
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${getStatusColor(lease.status)}`}>
                       {getStatusIcon(lease.status)}
                       <span className="ml-1">{lease.status}</span>
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 sm:px-6 py-3 whitespace-nowrap text-xs sm:text-sm font-medium">
                     <div className="flex space-x-2">
                       <Link
                         to={`/dashboard/lease/${lease.id}`}
