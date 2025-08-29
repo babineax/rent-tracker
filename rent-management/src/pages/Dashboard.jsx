@@ -12,7 +12,9 @@ function Dashboard() {
       <Navigation />
       {/* Main Content */}
       <main className="min-h-screen">
-        {location.pathname === '/dashboard' ? <DashboardHome /> : <Outlet />}
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+          {location.pathname === '/dashboard' ? <DashboardHome /> : <Outlet />}
+        </div>
       </main>
     </div>
   );

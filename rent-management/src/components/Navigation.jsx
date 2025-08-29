@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function Navigation() {
   const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const isActive = (path) => {
     return location.pathname === path ? 'bg-airbnb-red-600 text-white' : 'text-white hover:bg-airbnb-red-500 hover:text-white';
   };
@@ -21,7 +22,8 @@ function Navigation() {
               </div>
               <Link to="/dashboard" className="text-xl sm:text-2xl font-bold">RentEase</Link>
             </div>
-            <div className="flex space-x-2 sm:space-x-4">
+            {/* Desktop nav */}
+            <div className="hidden md:flex space-x-2 sm:space-x-4">
               <Link to="/dashboard" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard')}`}>
                 Dashboard
               </Link>
@@ -34,35 +36,48 @@ function Navigation() {
               <Link to="/dashboard/maintenance" className={`px-3 sm:px-4 py-2 rounded-airbnb-lg text-sm sm:text-base font-medium transition-all duration-200 ${isActive('/dashboard/maintenance')}`}>
                 Maintenance
               </Link>
-              
             </div>
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md hover:bg-airbnb-red-600 focus:outline-none focus:ring-2 focus:ring-white"
+              aria-label="Open menu"
+              onClick={() => setMobileOpen((v) => !v)}
+            >
+              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {mobileOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
       </nav>
 
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden bg-airbnb-red-500 text-white shadow-airbnb border-t border-airbnb-red-400">
+          <div className="px-4 py-2 space-y-1">
+            <Link onClick={() => setMobileOpen(false)} to="/dashboard" className={`block px-3 py-2 rounded-airbnb-lg text-sm font-medium ${isActive('/dashboard')}`}>Dashboard</Link>
+            <Link onClick={() => setMobileOpen(false)} to="/dashboard/finance" className={`block px-3 py-2 rounded-airbnb-lg text-sm font-medium ${isActive('/dashboard/finance')}`}>Finance</Link>
+            <Link onClick={() => setMobileOpen(false)} to="/dashboard/rent-log" className={`block px-3 py-2 rounded-airbnb-lg text-sm font-medium ${isActive('/dashboard/rent-log')}`}>Rent Log</Link>
+            <Link onClick={() => setMobileOpen(false)} to="/dashboard/maintenance" className={`block px-3 py-2 rounded-airbnb-lg text-sm font-medium ${isActive('/dashboard/maintenance')}`}>Maintenance</Link>
+          </div>
+        </div>
+      )}
+
       {/* Secondary Navbar */}
       <nav className="bg-airbnb-white-600 text-black shadow-md">
-  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex justify-end items-center h-12">
-      <div className="flex space-x-2 sm:space-x-4">
-        <Link to="/dashboard/add-property" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-property' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          Add Property
-        </Link>
-        <Link to="/dashboard/add-unit" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-unit' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          Add Unit
-        </Link>
-        <Link to="/dashboard/add-tenant" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-tenant' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          Add Tenant
-        </Link>
-        <Link to="/dashboard/add-lease" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-lease' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          Add Lease
-        </Link>
-        <Link to="/dashboard/tenants" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/tenants' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          View Tenants
-        </Link>
-        <Link to="/dashboard/leases" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/leases' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>
-          View Leases
-        </Link>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="hidden md:flex justify-end items-center h-12">
+            <div className="flex space-x-2 sm:space-x-4">
+              <Link to="/dashboard/add-property" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-property' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>Add Property</Link>
+              <Link to="/dashboard/add-unit" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-unit' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>Add Unit</Link>
+              <Link to="/dashboard/add-tenant" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-tenant' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>Add Tenant</Link>
+              <Link to="/dashboard/add-lease" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/add-lease' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>Add Lease</Link>
+              <Link to="/dashboard/tenants" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/tenants' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>View Tenants</Link>
+              <Link to="/dashboard/leases" className={`px-3 sm:px-4 py-1 rounded-airbnb-lg text-xs sm:text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard/leases' ? 'bg-white text-airbnb-red-600' : 'text-black hover:bg-white hover:text-airbnb-red-600'}`}>View Leases</Link>
             </div>
           </div>
         </div>

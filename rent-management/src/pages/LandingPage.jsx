@@ -13,16 +13,32 @@ function LandingPage() {
     <div className="bg-gradient-to-b from-blue-50 to-white text-gray-800">
       {/* Navbar */}
       <nav className="sticky top-0 bg-white shadow-md z-50">
-        <div className="container mx-auto flex justify-between items-center px-6 py-4">
+        <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 py-4">
           <div className="flex items-center space-x-2">
-            <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
-            <span className="font-bold text-xl text-pink-600">Rentease</span>
+            <img src={logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" />
+            <span className="font-bold text-lg sm:text-xl text-pink-600">Rentease</span>
           </div>
           <div className="space-x-6 hidden md:flex">
             <a href="#home" className="hover:text-pink-600">Home</a>
             <a href="#features" className="hover:text-pink-600">Features</a>
             <a href="#pricing" className="hover:text-pink-600">Pricing</a>
             <a href="#contact" className="hover:text-pink-600">Contact</a>
+          </div>
+          <button className="md:hidden p-2 rounded hover:bg-gray-100" onClick={() => {
+            const menu = document.getElementById('landing-mobile-menu');
+            if (menu) menu.classList.toggle('hidden');
+          }} aria-label="Toggle menu">
+            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+        <div id="landing-mobile-menu" className="md:hidden hidden border-t">
+          <div className="px-4 py-2 space-y-1">
+            <a href="#home" className="block py-2">Home</a>
+            <a href="#features" className="block py-2">Features</a>
+            <a href="#pricing" className="block py-2">Pricing</a>
+            <a href="#contact" className="block py-2">Contact</a>
           </div>
         </div>
       </nav>
