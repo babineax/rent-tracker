@@ -1,5 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getRentRoll, getFinanceKpis } from '../services/financeService.js';
+import {
+  getRentRoll,
+  getFinanceKpis,
+  getMonthlyCollectionsSeries,
+  getBreakdownByProperty,
+  getBreakdownByStatus,
+  getCurrencyBreakdown
+} from '../services/financeService.js';
 import { getProperties, getUnits } from '../services/propertyManagementService.js';
 
 // Finance ViewModel: manages filters, loads data, and exposes export-ready rows
@@ -21,6 +28,11 @@ export const useFinance = () => {
   // Data state
   const [rentRoll, setRentRoll] = useState([]);
   const [kpis, setKpis] = useState(null);
+  // Chart datasets
+  const [monthlySeries, setMonthlySeries] = useState([]);
+  const [breakdownByProperty, setBreakdownByProperty] = useState([]);
+  const [breakdownByStatus, setBreakdownByStatus] = useState([]);
+  const [currencyBreakdown, setCurrencyBreakdown] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -43,23 +55,45 @@ export const useFinance = () => {
     }
   }, []);
 
-  // Load finance data (rent roll + KPIs)
+  // Load finance data from Supabase (rent roll, KPIs, and chart datasets)
   const loadFinance = useCallback(async (customFilters = null) => {
     try {
       setLoading(true);
       setError(null);
 
       const filtersToUse = customFilters || filters;
-      const [{ data: rows, error: rrErr }, { data: kpiData, error: kpiErr }] = await Promise.all([
+      const [
+        { data: rows, error: rrErr },
+        { data: kpiData, error: kpiErr },
+        { data: series, error: seriesErr },
+        { data: byProp, error: propErr },
+        { data: byStatus, error: statusErr },
+        { data: byCurrency, error: currencyErr }
+      ] = await Promise.all([
+        // Table rows (leases snapshot for the month)
         getRentRoll(filtersToUse),
-        getFinanceKpis(filtersToUse)
+        // KPIs derived from rent_logs for accuracy
+        getFinanceKpis(filtersToUse),
+        // Chart datasets (rent_logs aggregations)
+        getMonthlyCollectionsSeries(filtersToUse, 6),
+        getBreakdownByProperty(filtersToUse),
+        getBreakdownByStatus(filtersToUse),
+        getCurrencyBreakdown(filtersToUse)
       ]);
 
       if (rrErr) throw new Error(rrErr);
       if (kpiErr) throw new Error(kpiErr);
+      if (seriesErr) throw new Error(seriesErr);
+      if (propErr) throw new Error(propErr);
+      if (statusErr) throw new Error(statusErr);
+      if (currencyErr) throw new Error(currencyErr);
 
       setRentRoll(rows || []);
       setKpis(kpiData || null);
+      setMonthlySeries(series || []);
+      setBreakdownByProperty(byProp || []);
+      setBreakdownByStatus(byStatus || []);
+      setCurrencyBreakdown(byCurrency || []);
     } catch (err) {
       console.error('Error loading finance data:', err);
       setError(err.message);
@@ -98,6 +132,10 @@ export const useFinance = () => {
     // Data
     rentRoll,
     kpis,
+    monthlySeries,
+    breakdownByProperty,
+    breakdownByStatus,
+    currencyBreakdown,
     loading,
     error,
 
