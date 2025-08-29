@@ -28,15 +28,15 @@ function ExpenseForm({ onAddExpense }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <input type="date" name="date" value={expense.date} onChange={handleChange} className="p-2 border rounded" />
         <input type="text" name="property_name" value={expense.property_name} onChange={handleChange} placeholder="Property Name" className="p-2 border rounded" />
         <input type="text" name="category" value={expense.category} onChange={handleChange} placeholder="Category" className="p-2 border rounded" />
         <input type="number" name="amount" value={expense.amount} onChange={handleChange} placeholder="Amount" className="p-2 border rounded" />
-        <textarea name="description" value={expense.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded md:col-span-2"></textarea>
+        <textarea name="description" value={expense.description} onChange={handleChange} placeholder="Description" className="p-2 border rounded sm:col-span-2"></textarea>
       </div>
-      <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">Add Expense</button>
+      <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded w-full sm:w-auto">Add Expense</button>
     </form>
   );
 }

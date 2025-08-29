@@ -123,8 +123,8 @@ function TenantForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Add New Tenant</h2>
+    <div className="max-w-2xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Add New Tenant</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormField
@@ -207,7 +207,7 @@ function TenantForm() {
           </div>
         </div>
 
-        <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-4 pt-6 border-t border-gray-200">
           <button
             type="button"
             onClick={() => {
@@ -222,7 +222,7 @@ function TenantForm() {
               });
               setErrors({});
             }}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
           >
             Clear Form
           </button>
@@ -230,7 +230,7 @@ function TenantForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`px-6 py-2 text-white rounded-md transition-colors ${
+            className={`w-full sm:w-auto px-6 py-2 text-white rounded-md transition-colors ${
               isSubmitting 
                 ? 'bg-gray-400 cursor-not-allowed' 
                 : 'bg-blue-600 hover:bg-blue-700'

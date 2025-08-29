@@ -422,7 +422,7 @@ function UnitForm() {
         </div>
 
         {/* submit buttons */}
-        <div className="flex justify-end space-x-4 pt-6 border-t border-airbnb-200">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-4 pt-6 border-t border-airbnb-200">
           <button
             type="button"
             onClick={() => {
@@ -443,7 +443,7 @@ function UnitForm() {
               });
               setErrors({});
             }}
-            className="px-6 py-3 text-airbnb-700 bg-airbnb-100 rounded-airbnb-lg hover:bg-airbnb-200 transition-all duration-200 font-semibold"
+            className="w-full sm:w-auto px-6 py-3 text-airbnb-700 bg-airbnb-100 rounded-airbnb-lg hover:bg-airbnb-200 transition-all duration-200 font-semibold"
           >
             Clear Form
           </button>
@@ -451,7 +451,7 @@ function UnitForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`px-8 py-3 text-white rounded-airbnb-lg transition-all duration-200 font-semibold ${
+            className={`w-full sm:w-auto px-8 py-3 text-white rounded-airbnb-lg transition-all duration-200 font-semibold ${
               isSubmitting 
                 ? 'bg-airbnb-400 cursor-not-allowed' 
                 : 'bg-airbnb-red-500 hover:bg-airbnb-red-600 shadow-airbnb hover:shadow-airbnb-lg transform hover:-translate-y-0.5'
